@@ -11,17 +11,6 @@ Main {
   __
 
   description <<-__
-    sekrets is a command line tool and library used to securely manage
-    encrypted files and settings in your rails' applications and git
-    repositories.
-
-    under the hood it uses ruby's built-in openssl/blowfish utilities for
-    encryption.  
-
-    sekrets allows one to manipulate encrypted files from the command line and
-    to safely check these encrypted files into revision control
-
-    the command line provides simple read, write, and edit capabilities 
   __
 
 #

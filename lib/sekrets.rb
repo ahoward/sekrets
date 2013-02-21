@@ -3,7 +3,66 @@ class Sekrets
   Fattr(:env){ 'SEKRETS_KEY' }
   Fattr(:editor){ ENV['SEKRETS_EDITOR'] || ENV['EDITOR'] || 'vim' }
   Fattr(:root){ defined?(Rails.root) ? Rails.root : '.' }
-  Fattr(:key){ File.join(root, 'sekrets.key') }
+  Fattr(:project_key){ File.join(root, 'sekrets.key') }
+  Fattr(:global_key){ File.join(File.expand_path('~'), '.sekrets.key') }
+
+#
+  def Sekrets.key_for(*args)
+    options = Map.options_for!(args)
+    path = args.shift || options[:path]
+
+    if options.has_key?(:key)
+      key = options[:key]
+      return(key)
+    end
+
+    path = path_for(path)
+
+    if path
+      keyfiles =
+        Coerce.list_of_strings(
+          [:keyfile, :keyfiles].map{|k| options[k]},
+          %W[ #{ path }.key #{ path }.k ]
+        )
+
+      keyfiles.each do |file|
+        if test(?s, file)
+          key = IO.binread(file).strip
+          return(key)
+        end
+      end
+    end
+
+    if Sekrets.project_key and test(?s, Sekrets.project_key)
+      return IO.binread(Sekrets.project_key).strip
+    end
+
+    env_key = (options[:env] || Sekrets.env).to_s
+    if ENV.has_key?(env_key)
+      key = ENV[env_key]
+      return(key)
+    end
+
+    if Sekrets.global_key and test(?s, Sekrets.global_key)
+      return IO.binread(Sekrets.global_key).strip
+    end
+
+    unless options[:prompt] == false
+      if console?
+        key = Sekrets.ask(path)
+        return(key)
+      end
+    end
+
+    return nil
+  end
+
+#
+  def Sekrets.key_for!(*args, &block)
+    key = Sekrets.key_for(*args, &block)
+    raise(ArgumentError, 'no key!') unless key
+    key
+  end
 
 #
   def Sekrets.read(*args, &block)
@@ -36,60 +95,6 @@ class Sekrets
 
     encrypted
     new(encrypted)
-  end
-
-#
-  def Sekrets.key_for(*args)
-    options = Map.options_for!(args)
-    path = args.shift || options[:path]
-
-    if options.has_key?(:key)
-      key = options[:key]
-      return(key)
-    end
-
-    path = path_for(path)
-
-    if path
-      keyfiles =
-        Coerce.list_of_strings(
-          [:keyfile, :keyfiles].map{|k| options[k]},
-          %W[ #{ path }.key #{ path }.k ]
-        )
-
-      keyfiles.each do |file|
-        if test(?s, file)
-          key = IO.binread(file).strip
-          return(key)
-        end
-      end
-    end
-
-    if Sekrets.key and test(?s, Sekrets.key)
-      return IO.binread(Sekrets.key).strip
-    end
-
-    env_key = (options[:env] || Sekrets.env).to_s
-    if ENV.has_key?(env_key)
-      key = ENV[env_key]
-      return(key)
-    end
-
-    unless options[:prompt] == false
-      if console?
-        key = Sekrets.ask(path)
-        return(key)
-      end
-    end
-
-    return nil
-  end
-
-#
-  def Sekrets.key_for!(*args, &block)
-    key = Sekrets.key_for(*args, &block)
-    raise(ArgumentError, 'no key!') unless key
-    key
   end
 
 #
