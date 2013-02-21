@@ -19,7 +19,7 @@ Testing Sekrets do
 
     paths = {
       'plaintext' => 'plaintext',
-      'plaintext.key' => 'file key'
+      '.plaintext.key' => 'file key'
     }
 
     options = {

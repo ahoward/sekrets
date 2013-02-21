@@ -33,11 +33,17 @@ DESCRIPTION
 
     # put the decryption key in a file
       
-      echo 42 > sekrets.key
+      echo 42 > .sekrets.key
 
     # ignore this file in git
 
-      echo sekrets.key >> .gitgnore
+      echo .sekrets.key >> .gitgnore
+
+    # you now no longer need to provide the --key argument to commands
+
+      sekrets read config/settings.yml.enc
+
+      sekrets edit config/settings.yml.enc
 
     # make sure this file gets deployed on your server
 
@@ -75,11 +81,7 @@ DESCRIPTION
     - otherwise the code looks for a companion key file.  for example, given the
       file 'config/sekrets.yml.enc' sekrets will look for a key at
       
-        config/sekrets.yml.enc.key
-        
-      and 
-      
-        config/sekrets.yml.enc.k
+        config/.sekrets.yml.enc.key
         
       if either of these is found to be non-empty the contents of the file will
       be used as the decryption key for that file.  you should *never* commit
@@ -87,11 +89,11 @@ DESCRIPTION
 
     - next a project key file is looked for.  the path of this file is
       
-        ./sekrets.key
+        ./.sekrets.key
         
       normally and, in a rails' application
 
-        RAILS_ROOT/sekrets.key
+        RAILS_ROOT/.sekrets.key
 
     - if that is not found sekrets looks for the key in the environment under
       the env var

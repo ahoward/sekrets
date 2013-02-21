@@ -3,7 +3,7 @@ class Sekrets
   Fattr(:env){ 'SEKRETS_KEY' }
   Fattr(:editor){ ENV['SEKRETS_EDITOR'] || ENV['EDITOR'] || 'vim' }
   Fattr(:root){ defined?(Rails.root) ? Rails.root : '.' }
-  Fattr(:project_key){ File.join(root, 'sekrets.key') }
+  Fattr(:project_key){ File.join(root, '.sekrets.key') }
   Fattr(:global_key){ File.join(File.expand_path('~'), '.sekrets.key') }
 
 #
@@ -19,10 +19,12 @@ class Sekrets
     path = path_for(path)
 
     if path
+      dirname, basename = File.split(path)
+
       keyfiles =
         Coerce.list_of_strings(
           [:keyfile, :keyfiles].map{|k| options[k]},
-          %W[ #{ path }.key #{ path }.k ]
+          %W[ #{ dirname }/.#{ basename }.key #{ dirname }/.#{ basename }.k ]
         )
 
       keyfiles.each do |file|
