@@ -13,7 +13,7 @@ DESCRIPTION
   TL;DR
     # create an encrypted config file
     
-      ruby -r yaml -e'puts {:api_key => 1234}.to_yaml' | sekrets write config/settings.yml.enc --key 42
+      ruby -r yaml -e'puts({:api_key => 1234}.to_yaml)' | sekrets write config/settings.yml.enc --key 42
 
     # display it
 
