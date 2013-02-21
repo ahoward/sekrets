@@ -13,5 +13,5 @@ Capistrano::Configuration.instance(:must_exist).load do
   end
 
 
-  before "deploy:finalize_update", "sekrets:upload_key"
+  after "deploy", "sekrets:upload_key"
 end
