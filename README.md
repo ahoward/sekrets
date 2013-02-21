@@ -1,0 +1,8 @@
+NAME
+
+SYNOPSIS
+
+DESCRIPTION
+
+INSTALL
+  gem install sekrets

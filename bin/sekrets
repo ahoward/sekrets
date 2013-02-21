@@ -1,0 +1,153 @@
+#! /usr/bin/env ruby
+
+Main {
+#
+  synopsis <<-__
+    ~> echo 'plaintext' | sekrets write sekrets.txt --key 42
+
+    ~> sekrets read sekrets.txt --key 42
+
+    ~> sekrets edit sekrets.txt
+  __
+
+  description <<-__
+    sekrets is a command line tool and library used to securely manage
+    encrypted files and settings in your rails' applications and git
+    repositories.
+
+    under the hood it uses ruby's built-in openssl/blowfish utilities for
+    encryption.  
+
+    sekrets allows one to manipulate encrypted files from the command line and
+    to safely check these encrypted files into revision control
+
+    the command line provides simple read, write, and edit capabilities 
+  __
+
+#
+  def run
+    help!
+  end
+
+#
+  mode(:write){
+    argument('output', 'o'){
+      argument :required
+      default STDOUT
+    }
+
+    argument('input', 'i'){
+      argument :required
+      default STDIN
+    }
+
+    option('key', 'k'){
+      argument :required
+    }
+
+    def run
+      Sekrets.openw(params[:output].value) do |output|
+        key = key_for(output)
+
+        Sekrets.openr(params[:input].value) do |input|
+          decrypted = input.read
+          encrypted = Sekrets.encrypt(key, decrypted)
+          output.write(encrypted)
+        end
+      end
+    end
+  }
+
+#
+  mode(:read){
+    argument('input', 'i'){
+      argument :required
+      default STDIN
+    }
+
+    argument('output', 'o'){
+      argument :required
+      default STDOUT
+    }
+
+    option('key', 'k'){
+      argument :required
+    }
+
+    def run
+      Sekrets.openr(params[:input].value) do |input|
+        key = key_for(input)
+
+        Sekrets.openw(params[:output].value) do |output|
+          encrypted = input.read
+          decrypted = Sekrets.decrypt(key, encrypted)
+          output.write(decrypted)
+        end
+      end
+    end
+  }
+
+#
+  mode(:edit){
+    argument(:path)
+
+    option('key', 'k'){
+      argument :required
+    }
+
+    def run
+      path = params[:path].value
+      path = File.expand_path(path)
+
+      key = key_for(path)
+
+      decrypted =
+        if test(?s, path)
+          Sekrets.read(path, :key => key)
+        else
+          ''
+        end
+
+      basename = File.basename(path)
+      encrypted = nil
+
+      Sekrets.tmpdir do
+        IO.binwrite(basename, decrypted)
+
+        command = "#{ Sekrets.editor } #{ basename }"
+
+        system(command)
+
+        if $?.exitstatus == 0
+          content = IO.binread(basename)
+          Sekrets.write(path, content, :key => key)
+        end
+      end
+    end
+  }
+
+#
+  def key_for(arg)
+    options = {}
+
+    if params[:key].given?
+      options[:key] = params[:key].value
+    end
+
+    key = Sekrets.key_for!(arg, options)
+  end
+}
+
+
+BEGIN {
+  require 'pathname'
+  bindir = Pathname.new(__FILE__).dirname.to_s
+  root = File.dirname(bindir)
+  libdir = File.join(root, 'lib')
+  require "#{ libdir }/sekrets.rb"
+  begin
+    require 'pry'
+  rescue Object
+    nil
+  end
+}
