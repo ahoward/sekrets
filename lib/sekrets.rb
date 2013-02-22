@@ -247,18 +247,19 @@ class Sekrets
       unindent(
         <<-__
           #! /usr/bin/env ruby
-
+          
           require 'pathname'
           ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
             Pathname.new(__FILE__).realpath)
-            
+          
           require 'rubygems'
           require 'bundler/setup'
-
-          ciphertext = File.expand_path('ciphertext', File.dirname(__FILE__))
-          ENV['SEKRETS_ARGV'] = "edit \#{ ciphertext }"
-
-          load Gem.bin_path('sekrets', 'sekrets')
+        
+          ciphertext = File.expand_path('ciphertext',
+          File.dirname(__FILE__))
+          ENV['SEKRETS_ARGV'] = "edit #{ ciphertext }"
+        
+          exec(Gem.bin_path('sekrets', 'sekrets'))
         __
       )
     )
@@ -414,14 +415,69 @@ BEGIN {
               end
 
             #
-              desc 'generate a secure editor for application sekrets'
+              desc 'generate a secure editor for plaintext application sekrets'
               task :editor do
+                keyfile = File.join(Rails.root, '.sekrets.key')
+                abort("run 'rake sekrets:generate:key' first") unless test(?e, keyfile)
+                key = IO.binread(keyfile)
+
                 editor = File.join(Rails.root, 'sekrets', 'editor')
+                ciphertext = File.join(Rails.root, 'sekrets', 'ciphertext')
 
                 unless test(?s, editor)
                   FileUtils.mkdir_p(File.dirname(editor))
                   open(editor, 'wb'){|fd| fd.write(Sekrets.binstub)}
                   File.chmod(0755, editor)
+                  puts "created #{ editor }"
+                end
+
+                unless test(?s, ciphertext)
+                  content = "# store sensitive infomation like credit cards, ssh keys, and passwords here\n\n\n"
+                  Sekrets.write(ciphertext, content, :key => key)
+                  puts "created #{ ciphertext }"
+                end
+
+                puts "run ./sekrets/editor to edit ./sekrets/ciphertext"
+              end
+
+            #
+              desc 'generate a secure config for application sekrets'
+              task :config do
+                keyfile = File.join(Rails.root, '.sekrets.key')
+                abort("run 'rake sekrets:generate:key' first") unless test(?e, keyfile)
+                key = IO.binread(keyfile)
+
+                config = File.join(Rails.root, 'config', 'sekrets.yml.enc')
+                unless test(?s, config)
+                  FileUtils.mkdir_p(File.dirname(config))
+                  require 'yaml' unless defined?(YAML)
+                  conf = {'api_key' => 42}.to_yaml
+                  open(config, 'wb'){|fd| fd.puts(conf)}
+                  puts "created #{ config }"
+                end
+
+                initializer = File.join(Rails.root, 'config', 'initializers', 'sekrets.rb')
+                unless test(?s, initializer)
+                  FileUtils.mkdir_p(File.dirname(initializer))
+                  open(initializer, 'wb') do |fd|
+                    code = <<-__
+
+                      config = File.join(Rails.root, 'config', 'sekrets.yml.enc')
+                      key = File.join(Rails.root, '.sekrets.key')
+
+                      if test(?e, config)
+                        if test(?e, key)
+                          SEKRETS = Sekrets.settings_for(config)
+                        else
+                          SEKRETS = Map.new
+                          warn "missing \#{ key }!"
+                        end
+                      end
+                      
+                    __
+                    fd.puts(code)
+                  end
+                  puts "created #{ initializer }"
                 end
               end
 

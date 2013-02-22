@@ -59,6 +59,14 @@ DESCRIPTION
 
       settings = Sekrets.settings_for('./config/settings.yml.enc')
       
+  RAILS
+    gem 'sekrets' # Gemfile
+
+    bundle install
+
+    rake sekrets:generate:key
+    rake sekrets:generate:editor
+    rake sekrets:generate:config
 
   DESCRIPTION
     sekrets provides commandline tools and a library to manage and access
@@ -134,9 +142,3 @@ DESCRIPTION
     distribution of this key among developers is outside the scope of the
     library.  likely unencrypted email is the best mechanism for distribution
     ;-/
-
-
-  RAILS
-    rake sekrets:generate:key
-    rake sekrets:generate:editor
-    rake sekrets:generate:config
