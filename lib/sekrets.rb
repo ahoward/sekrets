@@ -286,7 +286,7 @@ BEGIN {
   require 'tmpdir'
 
   class Sekrets < ::String
-    Version = '1.2.0' unless defined?(Version)
+    Version = '1.3.0' unless defined?(Version)
 
     class << Sekrets
       def version
