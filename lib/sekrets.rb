@@ -407,10 +407,16 @@ BEGIN {
                 end
 
                 puts "created #{ Rails.root }/.sekrets.key"
-                puts "do NOT commit this file"
+                puts "do *NOT* commit this file"
                 puts
                 puts "updated #{ Rails.root }/.gitignore"
-                puts "DO commit this file"
+                puts "yes *DO* commit this file"
+                puts
+                puts "*** YOU NEED TO DISTRIBUTE THIS KEY TO YOUR TEAM ***"
+                puts
+                puts "*** YOU NEED DEPLOY THIS KEY WITH YOUR APPLICATION ***"
+                puts
+                puts "hint: require 'sekrets/capistrano' in your Capfile"
                 puts
               end
 
