@@ -451,8 +451,8 @@ BEGIN {
                 unless test(?s, config)
                   FileUtils.mkdir_p(File.dirname(config))
                   require 'yaml' unless defined?(YAML)
-                  conf = {'api_key' => 42}.to_yaml
-                  open(config, 'wb'){|fd| fd.puts(conf)}
+                  content = {'api_key' => 42}.to_yaml
+                  Sekrets.write(config, content, :key => key)
                   puts "created #{ config }"
                 end
 
