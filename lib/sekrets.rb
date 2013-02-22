@@ -419,7 +419,7 @@ BEGIN {
               task :editor do
                 keyfile = File.join(Rails.root, '.sekrets.key')
                 abort("run 'rake sekrets:generate:key' first") unless test(?e, keyfile)
-                key = IO.binread(keyfile)
+                key = IO.binread(keyfile).strip
 
                 editor = File.join(Rails.root, 'sekrets', 'editor')
                 ciphertext = File.join(Rails.root, 'sekrets', 'ciphertext')
@@ -445,7 +445,7 @@ BEGIN {
               task :config do
                 keyfile = File.join(Rails.root, '.sekrets.key')
                 abort("run 'rake sekrets:generate:key' first") unless test(?e, keyfile)
-                key = IO.binread(keyfile)
+                key = IO.binread(keyfile).strip
 
                 config = File.join(Rails.root, 'config', 'sekrets.yml.enc')
                 unless test(?s, config)
