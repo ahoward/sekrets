@@ -380,7 +380,6 @@ BEGIN {
       class Engine < Rails::Engine
         engine_name :sekrets
 
-p self.name
         rake_tasks do
           namespace :sekrets do
             namespace :generate do
@@ -390,15 +389,28 @@ p self.name
                 keyfile = File.join(Rails.root, '.sekrets.key')
                 abort("#{ keyfile } exists!") if test(?e, keyfile)
                 key = SecureRandom.hex
-                open(keyfile, 'wb'){|fd| fd.write(key)}
+                open(keyfile, 'wb'){|fd| fd.puts(key)}
 
                 begin
-                  open(File.join(Rails.root, '.gitignore'), 'a+') do |fd|
-                    fd.puts
-                    fd.puts '.sekrets.key'
+                  gitignore = File.join(Rails.root, '.gitignore')
+                  buf = IO.read(gitignore)
+
+                  unless buf =~ /\.sekrets\.key/
+                    open(gitignore, '.gitignore'), 'a+') do |fd|
+                      fd.puts
+                      fd.puts '.sekrets.key'
+                      fd.puts
+                    end
                   end
                 rescue Object
                 end
+
+                puts "created #{ Rails.root }/.sekrets.key"
+                puts "do NOT commit this file"
+                puts
+                puts "updated #{ Rails.root }/.gitignore"
+                puts "DO commit this file"
+                puts
               end
 
             #
