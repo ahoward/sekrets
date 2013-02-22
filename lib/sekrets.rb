@@ -374,21 +374,42 @@ BEGIN {
     __
   }
 
-  if defined?(Rails::Engine)
+  if defined?(Rails)
 
     class Sekrets
       class Engine < Rails::Engine
         engine_name :sekrets
 
+p self.name
         rake_tasks do
           namespace :sekrets do
             namespace :generate do
+            #
+              desc 'generate a .sekrets.key'
+              task :key do
+                keyfile = File.join(Rails.root, '.sekrets.key')
+                abort("#{ keyfile } exists!") if test(?e, keyfile)
+                key = SecureRandom.hex
+                open(keyfile, 'wb'){|fd| fd.write(key)}
+
+                begin
+                  open(File.join(Rails.root, '.gitignore'), 'a+') do |fd|
+                    fd.puts
+                    fd.puts '.sekrets.key'
+                  end
+                rescue Object
+                end
+              end
+
+            #
+              desc 'generate a secure editor for application sekrets'
               task :editor do
                 editor = File.join(Rails.root, 'sekrets', 'editor')
 
                 unless test(?s, editor)
                   FileUtils.mkdir_p(File.dirname(editor))
                   open(editor, 'wb'){|fd| fd.write(Sekrets.binstub)}
+                  File.chmod(0755, editor)
                 end
               end
             end
