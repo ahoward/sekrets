@@ -3,11 +3,11 @@
 Main {
 #
   synopsis <<-__
-    ~> echo 'plaintext' | sekrets write sekrets.txt --key 42
+    ~> echo 'plaintext' | sekrets write sekrets.enc --key 42
 
-    ~> sekrets read sekrets.txt --key 42
+    ~> sekrets read sekrets.enc --key 42
 
-    ~> sekrets edit sekrets.txt
+    ~> sekrets edit sekrets.enc
   __
 
   description <<-__
@@ -198,6 +198,53 @@ Main {
     end
   }
 
+
+#
+  mode(:recrypt){
+    synopsis <<-__
+      re-encrypts a file with a new key
+    __
+
+    description <<-__
+      provide the old and new key by using the --key option twice
+
+      the first key is the current decryption key
+
+      the second key is the new one
+
+      if you do not provide the keys as options you will be prompted for them
+    __
+
+    examples <<-__
+      ~> sekrets recrypt sekrets.enc -k current_key -k new_key
+    __
+
+    argument(:path)
+
+    option('key', 'k'){
+      argument :required
+    }
+
+    def run
+      path = params[:path].value
+
+      cur_key, new_key, *ignored = params[:key].values.first(2)
+
+      unless cur_key
+        cur_key = Sekrets.ask("#{ path } [cur key]")
+      end
+
+      unless new_key
+        new_key = Sekrets.ask("#{ path } [new key]")
+      end
+
+      decrypted = Sekrets.read(path, :key => cur_key)
+      encrypted = Sekrets.write(path, decrypted, :key => new_key)
+      decrypted = Sekrets.read(path, :key => new_key)
+      puts path
+    end
+  }
+
 #
   mode(:edit){
     argument(:path)
@@ -252,13 +299,18 @@ Main {
 
 BEGIN {
   require 'pathname'
+
   bindir = Pathname.new(__FILE__).dirname.to_s
   root = File.dirname(bindir)
   libdir = File.join(root, 'lib')
+
   require "#{ libdir }/sekrets.rb"
+
   begin
     require 'pry'
   rescue Object
     nil
   end
+
+  trap('SIGINT'){ STDERR.puts; exit!(42) }
 }
