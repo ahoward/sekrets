@@ -242,6 +242,37 @@ class Sekrets
     path
   end
 
+  def Sekrets.binstub
+    @binstub ||= (
+      unindent(
+        <<-__
+          #! /usr/bin/env ruby
+
+          require 'pathname'
+          ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
+            Pathname.new(__FILE__).realpath)
+            
+          require 'rubygems'
+          require 'bundler/setup'
+
+          ciphertext = File.expand_path('ciphertext', File.dirname(__FILE__))
+          ENV['SEKRETS_ARGV'] = "edit \#{ ciphertext }"
+
+          load Gem.bin_path('sekrets', 'sekrets')
+        __
+      )
+    )
+  end
+
+  def Sekrets.unindent(string)
+    indent = string.split("\n").select {|line| !line.strip.empty? }.map {|line| line.index(/[^\s]/) }.compact.min || 0
+    string.gsub(/^[[:blank:]]{#{indent}}/, '')
+  end
+
+  def Sekrets.unindent!(string)
+    string.replace(string.unindent)
+  end
+
 #
   module Blowfish
     def cipher(mode, key, data)
@@ -342,4 +373,29 @@ BEGIN {
 
     __
   }
+
+  if defined?(Rails::Engine)
+
+    class Sekrets
+      class Engine < Rails::Engine
+        engine_name :sekrets
+
+        rake_tasks do
+          namespace :sekrets do
+            namespace :generate do
+              task :editor do
+                editor = File.join(Rails.root, 'sekrets', 'editor')
+
+                unless test(?s, editor)
+                  FileUtils.mkdir_p(File.dirname(editor))
+                  open(editor, 'wb'){|fd| fd.write(Sekrets.binstub)}
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+
+  end
 }

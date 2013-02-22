@@ -363,4 +363,10 @@ BEGIN {
   end
 
   trap('SIGINT'){ STDERR.puts; exit!(42) }
+
+  if((sekrets_argv = ENV['SEKRETS_ARGV']))
+    ENV.delete('SEKRETS_ARGV')
+    command = [$0, sekrets_argv, *ARGV].flatten.compact.join(' ')
+    exec(command)
+  end
 }
