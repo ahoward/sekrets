@@ -142,6 +142,21 @@ Main {
 
 #
   mode(:write){
+    synopsis <<-__
+      write encrypted data to file
+    __
+
+    description <<-__
+      write mode writes it's input (default STDIN) to output (deafult STDOUT)
+      after encrypting it with key
+    __
+
+    examples <<-__
+      ~> echo 'the pazzw0rd' | sekrets write -k 42 > sekrets.enc
+
+      ~> sekrets write output.enc input.txt -k 42
+    __
+
     argument('output', 'o'){
       argument :required
       default STDOUT
@@ -171,6 +186,21 @@ Main {
 
 #
   mode(:read){
+    synopsis <<-__
+      reads encrypted data from a file
+    __
+
+    description <<-__
+      read mode reads it's input (default STDIN) and writes it's output
+      (default STDOUT) after decrypting it with key
+    __
+
+    examples <<-__
+      ~> cat output.enc | sekrets read -k 42
+
+      ~> sekrets read output.enc output.dec -k 42
+    __
+
     argument('input', 'i'){
       argument :required
       default STDIN
@@ -247,6 +277,26 @@ Main {
 
 #
   mode(:edit){
+    synopsis <<-__
+      spawn an external editor to edit an encrypted file
+    __
+
+    description <<-__
+      edit mode looks first to the unix environment variable SEKRETS_EDTIOR
+      or, if that is not found, the normal EDITOR variable to determine which
+      editor to launch.  it assumes that your editor can be launched from the
+      commandline with a file as single argument. vim is the default editor.
+
+      after the editor program exits succesfully the temporary file is
+      encrypted and saved.
+    __
+
+    examples <<-__
+      ~> sekrets edit my.passwords.txt -k
+
+      ~> EDITOR=mate sekrets edit my.passwords.txt -k
+    __
+
     argument(:path)
 
     option('key', 'k'){
