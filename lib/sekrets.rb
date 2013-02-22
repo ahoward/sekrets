@@ -257,7 +257,7 @@ class Sekrets
         
           ciphertext = File.expand_path('ciphertext',
           File.dirname(__FILE__))
-          ENV['SEKRETS_ARGV'] = "edit #{ ciphertext }"
+          ENV['SEKRETS_ARGV'] = "edit \#{ ciphertext }"
         
           exec(Gem.bin_path('sekrets', 'sekrets'))
         __
