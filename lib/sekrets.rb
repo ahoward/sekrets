@@ -396,7 +396,7 @@ BEGIN {
                   buf = IO.read(gitignore)
 
                   unless buf =~ /\.sekrets\.key/
-                    open(gitignore, '.gitignore'), 'a+') do |fd|
+                    open(gitignore, 'a+') do |fd|
                       fd.puts
                       fd.puts '.sekrets.key'
                       fd.puts
@@ -424,6 +424,7 @@ BEGIN {
                   File.chmod(0755, editor)
                 end
               end
+
             end
           end
         end

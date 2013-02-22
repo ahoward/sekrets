@@ -134,3 +134,9 @@ DESCRIPTION
     distribution of this key among developers is outside the scope of the
     library.  likely unencrypted email is the best mechanism for distribution
     ;-/
+
+
+  RAILS
+    rake sekrets:generate:key
+    rake sekrets:generate:editor
+    rake sekrets:generate:config
