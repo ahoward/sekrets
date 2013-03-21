@@ -257,9 +257,16 @@ class Sekrets
         
           ciphertext = File.expand_path('ciphertext',
           File.dirname(__FILE__))
-          ENV['SEKRETS_ARGV'] = "edit \#{ ciphertext }"
-        
-          exec(Gem.bin_path('sekrets', 'sekrets'))
+
+          if ARGV.empty?
+            ciphertext = File.expand_path('ciphertext', File.dirname(__FILE__))
+            ENV['SEKRETS_ARGV'] = "edit \#{ ciphertext }"
+          end
+
+          command = "\#{ Gem.bin_path('sekrets', 'sekrets') } \#{ ARGV.join(' ') }"
+                  
+          exec(command)
+
         __
       )
     )
@@ -318,7 +325,7 @@ BEGIN {
   require 'tmpdir'
 
   class Sekrets < ::String
-    Version = '1.3.0' unless defined?(Version)
+    Version = '1.4.0' unless defined?(Version)
 
     class << Sekrets
       def version
@@ -486,7 +493,6 @@ BEGIN {
                   puts "created #{ initializer }"
                 end
               end
-
             end
           end
         end
