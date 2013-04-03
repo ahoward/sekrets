@@ -3,7 +3,7 @@
 
 Gem::Specification::new do |spec|
   spec.name = "sekrets"
-  spec.version = "1.4.0"
+  spec.version = "1.5.0"
   spec.platform = Gem::Platform::RUBY
   spec.summary = "sekrets"
   spec.description = "description: sekrets kicks the ass"
@@ -13,7 +13,6 @@ Gem::Specification::new do |spec|
  "Rakefile",
  "bin",
  "bin/sekrets",
- "foobar",
  "lib",
  "lib/sekrets",
  "lib/sekrets.rb",
