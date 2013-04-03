@@ -37,7 +37,7 @@ DESCRIPTION
 
     # ignore this file in git
 
-      echo .sekrets.key >> .gitgnore
+      echo .sekrets.key >> .gitignore
 
     # you now no longer need to provide the --key argument to commands
 
