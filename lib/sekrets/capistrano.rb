@@ -33,5 +33,5 @@ Capistrano::Configuration.instance(:must_exist).load do
   end
   
   
-  after('deploy', 'deploy:create_symlink')
+  after('deploy:create_symlink', 'sekrets:upload_key')
 end
