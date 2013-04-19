@@ -140,5 +140,5 @@ DESCRIPTION
     and also should be in .gitignore
 
     distribution of this key among developers is outside the scope of the
-    library.  likely unencrypted email is the best mechanism for distribution
-    ;-/
+    library.  encrypted email is likely the best mechanism for distribution,
+    but you've still got to sovle this problem for yourself ;-/
