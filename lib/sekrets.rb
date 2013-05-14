@@ -151,7 +151,7 @@ class Sekrets
       dirname
     end
   end
- 
+
 #
   def Sekrets.openw(arg, &block)
     opened = false
@@ -174,7 +174,7 @@ class Sekrets
           open(tmp, 'wb+')
       end
 
-    close = 
+    close =
       proc do
         io.close if opened
         atomic_move.call
@@ -207,7 +207,7 @@ class Sekrets
           open(arg, 'rb+')
       end
 
-    close = 
+    close =
       proc do
         io.close if opened
       end
@@ -247,14 +247,14 @@ class Sekrets
       unindent(
         <<-__
           #! /usr/bin/env ruby
-          
+
           require 'pathname'
           ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
             Pathname.new(__FILE__).realpath)
-          
+
           require 'rubygems'
           require 'bundler/setup'
-        
+
           ciphertext = File.expand_path('ciphertext',
           File.dirname(__FILE__))
 
@@ -264,7 +264,7 @@ class Sekrets
           end
 
           command = "\#{ Gem.bin_path('sekrets', 'sekrets') } \#{ ARGV.join(' ') }"
-                  
+
           exec(command)
 
         __
@@ -334,11 +334,11 @@ BEGIN {
 
       def dependencies
         {
-          'highline' => [ 'highline' , ' >= 1.6.15'  ] , 
-          'map'      => [ 'map'      , ' >= 6.3.0'   ]  , 
-          'fattr'    => [ 'fattr'    , ' >= 2.2.1'   ]  , 
-          'coerce'   => [ 'coerce'   , ' >= 0.0.3'   ]  , 
-          'main'     => [ 'main'     , ' >= 5.1.1'   ]  , 
+          'highline' => [ 'highline' , ' >= 1.6.15'  ] ,
+          'map'      => [ 'map'      , ' >= 6.3.0'   ]  ,
+          'fattr'    => [ 'fattr'    , ' >= 2.2.1'   ]  ,
+          'coerce'   => [ 'coerce'   , ' >= 0.0.3'   ]  ,
+          'main'     => [ 'main'     , ' >= 5.1.1'   ]  ,
         }
       end
 
@@ -445,7 +445,7 @@ BEGIN {
                 end
 
                 unless test(?s, ciphertext)
-                  content = "# store sensitive infomation like credit cards, ssh keys, and passwords here\n\n\n"
+                  content = "# Store sensitive information like credit cards, ssh keys, and passwords here. Don't worry, it's your secret.\n\n\n"
                   Sekrets.write(ciphertext, content, :key => key)
                   puts "created #{ ciphertext }"
                 end
@@ -486,7 +486,7 @@ BEGIN {
                           warn "missing \#{ key }!"
                         end
                       end
-                      
+
                     __
                     fd.puts(code)
                   end
