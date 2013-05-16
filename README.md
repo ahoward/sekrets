@@ -89,7 +89,7 @@ _Save the file and close._
 
 ## Having multiple Sekret files
 You can add additional files of passwords if you want to manage API passwords, separately.
-_You only need your single original `sekrets.key' file._
+_You only need your single original `.sekrets.key' file._
 
 ```
 $  sekrets edit config/zendesk.yml.enc
@@ -98,7 +98,7 @@ Creates a new encrypted file called 'zendesk.yml.enc'
 
 # Accessing secrets in your application code
 
-## Step 1 Set a variable
+## (Step 1) Set a variable
 ```
     settings = Sekrets.settings_for(Rails.root.join('sekrets', 'ciphertext')) # First File
 
@@ -106,7 +106,7 @@ Creates a new encrypted file called 'zendesk.yml.enc'
 ```
 
 
-## Step 2 Call variable
+## (Step 2) Call variable
 
 ```
     config.token = settings[:api_token] #=> 123thisIsATestKey
@@ -115,35 +115,44 @@ Creates a new encrypted file called 'zendesk.yml.enc'
 
 
 ### Configure things... (What things?)
-#### rake sekrets:generate:config
+
+```
+ rake sekrets:generate:config
+```
 
 # Non-Rails
-## create an encrypted config file
+Sekrets can be used in non-rails apps.
 
+## (Step 1) Create both key and encrypted file
+
+```
   ruby -r yaml -e'puts({:api_key => 1234}.to_yaml)' | sekrets write config/settings.yml.enc --key 42 # key can be called whatever you want it to be. ('42' is placeholder)
+```
 
-## put the decryption key in a file
+## (Step 2) Put the decryption key in a file
 
+```
   echo 42 > .sekrets.key
+```
 
-## you now no longer need to provide the --key argument to commands
+### you now no longer need to provide the --key argument to commands
 
+```
   sekrets read config/settings.yml.enc
-
   sekrets edit config/settings.yml.enc
+```
 
 After you add your key to `.sekrets.key', all sekret files will access the key.
-
 
 ## Additional Comments
 
 ### If using Capistrano
+_Not necessary for heroku_
 
 Make sure this file gets deployed on your server
 
   echo " require 'sekrets/capistrano' " >> Capfile
 
-_Not necessary if using heroku_
 
 
 ### KEY LOOKUP
