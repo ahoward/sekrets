@@ -1,18 +1,10 @@
 # Sekrets
 
-Create encrypted config files.
+Create encrypted config files and eliminate the need to check in unencrypted information, keys, or other sensitive key .
 
-sekrets is a command line tool and library used to securely manage encrypted files and settings in your rails' applications and git repositories.
+## About
 
-sekrets provides command line tools and a library to manage and access
-encrypted files in your code base.
-
-it allows one to check encrypted information into a repository and to manage
-it alongside the rest of the code base.  it elimnates the need to check in
-unencrypted information, keys, or other sensitive information.
-
-sekrets provides both a general mechanism for managing arbitrary encrypted
-files and a specific mechanism for managing encrypted config files.
+Sekrets is a command line tool to securely manage encrypted files and settings in your rails' applications and git repositories. Check encrypted information into a repository and manage it alongside the rest of the code base.
 
 # RAILS
 
@@ -67,22 +59,30 @@ Running that command will open your text editor. All your secrets will be added,
 
 _Save the file and close._
 
-## Step 5 Review your secrets
+# Review your secrets
 
-### Confirm your secrets are encrypted;
+## Confirm your secrets are encrypted;
 
 ```
   $ cat sekrets/ciphertext
 ```
 
-### Then, display your secrets;
+## Display your secrets;
 
 ```
   $ sekrets read sekrets/ciphertext
 ```
 
+## Use YAML formats (Preferred)
+Format your passwords in yaml.;
 
-## YAML formats
+```
+  # YAML file format
+
+  :api_key: 123thisIsATestKey
+  :another_sekret: foobarbaz
+```
+
 You can add an additional files of passwords if you want to manage API passwords, separately. However, you only need your original key.
 
 ```
@@ -91,14 +91,20 @@ $  sekrets edit config/zendesk.yml.enc
 
 # Accessing secrets in your application code
 
-Once you have your files created, you have a two step process
+## Step 1 Set a variable
+```
+    settings = Sekrets.settings_for(Rails.root.join('sekrets', 'ciphertext'))
+```
+
+## Step 2 Call variable
+
 
 ```
-    # Using the zendesk.yaml.enc file from YAML format example, in zendesk.rb
-
-    settings = Sekrets.settings_for(Rails.root.join('config', 'zendesk.yml.enc'))
-    config.token = settings[:api_token]
+    config.token = settings[:api_token] #=> 123thisIsATestKey
+    config.foo = settings[:another_sekret] #=> foobarbaz
 ```
+
+
 
 Creates a key
 
@@ -109,113 +115,89 @@ Easily add and edit private information
 ### Configure things... (What things?)
 #### rake sekrets:generate:config
 
-# Non Rails
-### create an encrypted config file
+# Non-Rails
+## create an encrypted config file
 
   ruby -r yaml -e'puts({:api_key => 1234}.to_yaml)' | sekrets write config/settings.yml.enc --key 42
 
-### display it
 
-  sekrets read config/settings.yml.enc --key 42
+## Adding files to Git
 
-### edit it
-
-  sekrets edit config/settings.yml.enc --key 42
-
-### see that it's encrypted
-
-  cat config/settings.yml.enc
-
-### commit it
+## commit it
 
   git add config/settings.yml.enc
 
-### put the decryption key in a file
+## put the decryption key in a file
 
   echo 42 > .sekrets.key
 
-### ignore this file in git
+## ignore this file in git
 
   echo .sekrets.key >> .gitignore
 
-### you now no longer need to provide the --key argument to commands
+## you now no longer need to provide the --key argument to commands
 
   sekrets read config/settings.yml.enc
 
   sekrets edit config/settings.yml.enc
 
-### make sure this file gets deployed on your server
+## make sure this file gets deployed on your server
 
   echo " require 'sekrets/capistrano' " >> Capfile
 
 unless deploying to heroku
 
-### commit and deploy
+## commit and deploy
 
   git add config/settings.yml.enc
   git commit -am'encrypted settings yo'
   git pull && git push && cap staging deploy
 
-### access these settings in your application code
 
-  settings = Sekrets.settings_for('./config/settings.yml.enc')
+## Additional Comments
+### KEY LOOKUP
+for *all* operations, from the command line or otherwise, sekrets uses the
+following algorithm to search for a decryption key:
 
+- any key passed directly as a parameter to a library call will be preferred
 
-# DESCRIPTION
-  sekrets provides commandline tools and a library to manage and access
-  encrypted files in your code base.
+- otherwise the code looks for a companion key file.  for example, given the
+  file 'config/sekrets.yml.enc' sekrets will look for a key at
 
-  it allows one to check encrypted information into a repository and to manage
-  it alongside the rest of the code base.  it elimnates the need to check in
-  unencrypted information, keys, or other sensitive information.
+    config/.sekrets.yml.enc.key
 
-  sekrets provides both a general mechanism for managing arbitrary encrypted
-  files and a specific mechanism for managing encrypted config files.
+  if either of these is found to be non-empty the contents of the file will
+  be used as the decryption key for that file.  you should *never* commit
+  these key files and also add them to your .gitignore - or similar.
 
+- next a project key file is looked for.  the path of this file is
 
-# KEY LOOKUP
-  for *all* operations, from the command line or otherwise, sekrets uses the
-  following algorithm to search for a decryption key:
+    ./.sekrets.key
 
-  - any key passed directly as a parameter to a library call will be preferred
+  normally and, in a rails' application
 
-  - otherwise the code looks for a companion key file.  for example, given the
-    file 'config/sekrets.yml.enc' sekrets will look for a key at
+    RAILS_ROOT/.sekrets.key
 
-      config/.sekrets.yml.enc.key
+- if that is not found sekrets looks for the key in the environment under
+  the env var
 
-    if either of these is found to be non-empty the contents of the file will
-    be used as the decryption key for that file.  you should *never* commit
-    these key files and also add them to your .gitignore - or similar.
+    SEKRETS_KEY
 
-  - next a project key file is looked for.  the path of this file is
+  the env var used is configurable in the library
 
-      ./.sekrets.key
+- next the global key file is search for, the path of this file is
 
-    normally and, in a rails' application
+    ~/.sekrets.key
 
-      RAILS_ROOT/.sekrets.key
-
-  - if that is not found sekrets looks for the key in the environment under
-    the env var
-
-      SEKRETS_KEY
-
-    the env var used is configurable in the library
-
-  - next the global key file is search for, the path of this file is
-
-      ~/.sekrets.key
-
-  - finally, if no key has yet been specified or found, the user is prompted
-    to input the key.  prompt only occurs if the user us attached to a tty.
-    so, for example, no prompt will hang and application being started in the
-    background such as a rails' application being managed by passenger.
+- finally, if no key has yet been specified or found, the user is prompted
+  to input the key.  prompt only occurs if the user us attached to a tty.
+  so, for example, no prompt will hang and application being started in the
+  background such as a rails' application being managed by passenger.
 
 
-  see Sekrets.key_for for more details
+see Sekrets.key_for for more details
 
-# KEY DISTRIBUTION
+### KEY DISTRIBUTION
   sekrets does *not* attempt to solve the key distribution problem for you,
   with one exception:
 
@@ -229,8 +211,9 @@ unless deploying to heroku
 
     scp ./sekrets.key deploy@remote.host.com:/rails_root/current/sekrets.key
 
-  it goes without saying that the local keyfile should *never* be checked in
-  and also should be in .gitignore
+### Be Smart
+
+  The local keyfile should *never* be checked in and also should be in .gitignore
 
   distribution of this key among developers is outside the scope of the
   library.  encrypted email is likely the best mechanism for distribution,
