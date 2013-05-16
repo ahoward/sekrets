@@ -1,3 +1,6 @@
+![](header.jpg)
+
+
 # Sekrets
 
 Create encrypted config files and eliminate the need to check in unencrypted information, keys, or other sensitive key .
@@ -8,7 +11,7 @@ Sekrets is a command line tool to securely manage encrypted files and settings i
 
 # RAILS
 
-## Step 1 Add the Sekrets Gem
+## (Step 1) Add the Sekrets Gem
 
 ```
   gem 'sekrets'
@@ -16,7 +19,7 @@ Sekrets is a command line tool to securely manage encrypted files and settings i
 
 _Don't forget to bundle install_
 
-## Step 2 Generate a key file
+## (Step 2) Generate a key file with Rake
 ```
   rake sekrets:generate:key
 ```
@@ -29,7 +32,7 @@ This will create a '.sekrets.key' file with somthing like;
     b6f3f6fd5a486054e014e3426e84334e
 
 
-## Step 3 Add the key file to your .gitignore
+## (Step 3) Add the key file to your .gitignore
 
 ```
   $ echo .sekrets.key >> .gitignore
@@ -37,7 +40,7 @@ This will create a '.sekrets.key' file with somthing like;
 
 You should **never** commit the key files
 
-## Step 4 Add your secrets
+## (Step 4) Add your secrets with Rake
 
 ```
   rake sekrets:generate:editor
@@ -49,31 +52,13 @@ This creates a sekrets directory with 2 files;
       ciphertext
       editor
 
-To add secrets run;
+### To add secrets run
 
 ```
   $  ./sekrets/editor
 ```
 
-Running that command will open your text editor. All your secrets will be added, and encrypted in `ciphertext`.
-
-_Save the file and close._
-
-# Review your secrets
-
-## Confirm your secrets are encrypted;
-
-```
-  $ cat sekrets/ciphertext
-```
-
-## Display your secrets;
-
-```
-  $ sekrets read sekrets/ciphertext
-```
-
-## Use YAML formats (Preferred)
+### Use YAML formats (Preferred)
 Format your passwords in yaml.;
 
 ```
@@ -83,21 +68,45 @@ Format your passwords in yaml.;
   :another_sekret: foobarbaz
 ```
 
-You can add an additional files of passwords if you want to manage API passwords, separately. However, you only need your original key.
+
+Running that command will open your text editor. All your secrets will be added, and encrypted in `ciphertext`.
+
+_Save the file and close._
+
+## Review your secrets
+
+### Confirm your secrets are encrypted
+
+```
+  $ cat sekrets/ciphertext
+```
+
+### Display your secrets;
+
+```
+  $ sekrets read sekrets/ciphertext
+```
+
+## Having multiple Sekret files
+You can add additional files of passwords if you want to manage API passwords, separately.
+_You only need your single original `sekrets.key' file._
 
 ```
 $  sekrets edit config/zendesk.yml.enc
 ```
+Creates a new encrypted file called 'zendesk.yml.enc'
 
 # Accessing secrets in your application code
 
 ## Step 1 Set a variable
 ```
-    settings = Sekrets.settings_for(Rails.root.join('sekrets', 'ciphertext'))
+    settings = Sekrets.settings_for(Rails.root.join('sekrets', 'ciphertext')) # First File
+
+    zendesk_secrets = Sekrets.settings_for(Rails.root.join('config', 'zendesk')) # zendesk File
 ```
 
-## Step 2 Call variable
 
+## Step 2 Call variable
 
 ```
     config.token = settings[:api_token] #=> 123thisIsATestKey
@@ -105,35 +114,17 @@ $  sekrets edit config/zendesk.yml.enc
 ```
 
 
-
-Creates a key
-
-### Add private information
-#### rake sekrets:generate:editor
-Easily add and edit private information
-
 ### Configure things... (What things?)
 #### rake sekrets:generate:config
 
 # Non-Rails
 ## create an encrypted config file
 
-  ruby -r yaml -e'puts({:api_key => 1234}.to_yaml)' | sekrets write config/settings.yml.enc --key 42
-
-
-## Adding files to Git
-
-## commit it
-
-  git add config/settings.yml.enc
+  ruby -r yaml -e'puts({:api_key => 1234}.to_yaml)' | sekrets write config/settings.yml.enc --key 42 # key can be called whatever you want it to be. ('42' is placeholder)
 
 ## put the decryption key in a file
 
   echo 42 > .sekrets.key
-
-## ignore this file in git
-
-  echo .sekrets.key >> .gitignore
 
 ## you now no longer need to provide the --key argument to commands
 
@@ -141,20 +132,20 @@ Easily add and edit private information
 
   sekrets edit config/settings.yml.enc
 
-## make sure this file gets deployed on your server
-
-  echo " require 'sekrets/capistrano' " >> Capfile
-
-unless deploying to heroku
-
-## commit and deploy
-
-  git add config/settings.yml.enc
-  git commit -am'encrypted settings yo'
-  git pull && git push && cap staging deploy
+After you add your key to `.sekrets.key', all sekret files will access the key.
 
 
 ## Additional Comments
+
+### If using Capistrano
+
+Make sure this file gets deployed on your server
+
+  echo " require 'sekrets/capistrano' " >> Capfile
+
+_Not necessary if using heroku_
+
+
 ### KEY LOOKUP
 for *all* operations, from the command line or otherwise, sekrets uses the
 following algorithm to search for a decryption key:
