@@ -6,9 +6,9 @@ Stop checking in unencrypted information.
 
 Sekrets is a command line tool to create and manage encrypted files.
 
-- [Using with Rails](#using-with-rails-)
-- [Using without Rails](#using-without-rails-)
-- [Additional Comments](#additional-comments-)
+- [Using with Rails](#using-with-rails)
+- [Using without Rails](#using-without-rails)
+- [Additional Comments](#additional-comments)
 
 ## Purpose
 
@@ -129,7 +129,7 @@ Now that you have secrets in a variable, you can use whatever content you need (
 ```
 This is the the primary use case of Sekrets. You can set tokens and other sensitive information in your app, worry free!
 
-[Additional Comments](#additional-comments-)
+[Additional Comments](#additional-comments)
 
 # Using without Rails
 Sekrets can be used in non-rails apps.
