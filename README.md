@@ -31,7 +31,7 @@ _Don't forget to bundle install_
 
 If you get an error, try `bundle exec rake sekrets:generate:key`
 
-This will create a '.sekrets.key' file with somthing like;
+This will create a '.sekrets.key' file with something like;
 
     b6f3f6fd5a486054e014e3426e84334e
 
@@ -212,17 +212,17 @@ see Sekrets.key_for for more details
 
   sekrets assumes that the local keyfile, if it exists, is correct.
 
-  in plain english the capistrano recipe does:
+  in plain English the capistrano recipe does:
 
     scp ./sekrets.key deploy@remote.host.com:/rails_root/current/sekrets.key
 
 ## Be Smart
 
-  The local keyfile should *never* be checked in and also should be in .gitignore
+  The local key file should *never* be checked in and also should be in .gitignore
 
   distribution of this key among developers is outside the scope of the
   library.  encrypted email is likely the best mechanism for distribution,
-  but you've still got to sovle this problem for yourself ;-/
+  but you've still got to solve this problem for yourself ;-/
 
 
 ## TODO: Document Configure
