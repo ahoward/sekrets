@@ -1,19 +1,20 @@
 ![](header.jpg)
 
-
-Create encrypted config files and stop checking in unencrypted information such as keys, or other sensitive information.
+Stop checking in unencrypted information.
 
 ## About
 
-Sekrets is a command line tool to create and manage encrypted files for Rails applications and git repositories.
+Sekrets is a command line tool to create and manage encrypted files.
 
 ## Purpose
 
 Check encrypted information into a repository and manage it alongside the rest of the code base.
 
-# RAILS
+# Using with RAILS
 
-## (Step 1) Add the Sekrets Gem
+## Setup
+
+### (Step 1) Add the Sekrets Gem
 
 ```
   gem 'sekrets'
@@ -21,20 +22,21 @@ Check encrypted information into a repository and manage it alongside the rest o
 
 _Don't forget to bundle install_
 
-## (Step 2) Generate a key file with Rake
+## File Creation
+
+### (Step 2) Generate a key file
 ```
   rake sekrets:generate:key
 ```
 
 If you get an error, try `bundle exec rake sekrets:generate:key`
 
-
 This will create a '.sekrets.key' file with somthing like;
 
     b6f3f6fd5a486054e014e3426e84334e
 
 
-## (Step 3) Add the key file to your .gitignore
+### (Step 3) Add .key to .gitignore
 
 ```
   $ echo .sekrets.key >> .gitignore
@@ -42,7 +44,7 @@ This will create a '.sekrets.key' file with somthing like;
 
 You should **never** commit .key files
 
-## (Step 4) Create the file that holds your secrets with Rake
+### (Step 4) Generate a file to holds secrets
 
 ```
   rake sekrets:generate:editor
@@ -54,20 +56,20 @@ This creates a sekrets directory with 2 files;
       ciphertext
       editor
 
-### To add secrets to that file, run
+#### Add secrets to file by running
 
 ```
   $  ./sekrets/editor
 ```
 
-Running that command will open your text editor. All your secrets will be added, and encrypted in `ciphertext`.
+That will opens your text editor. All your secrets will be added, and encrypted in `ciphertext`.
 
-### Use YAML formats (Preferred)
+#### Use YAML formats (Preferred)
 Format your passwords in yaml.;
 
 ```
   # YAML file format
-
+  # Example uses...
   :api_key: 123thisIsATestKey
   :another_sekret: foobarbaz
 ```
@@ -88,6 +90,8 @@ _Save the file and close._
   $ sekrets read sekrets/ciphertext
 ```
 
+Notice start with keyword `sekrets`
+
 ## Having multiple Sekret files
 You can add additional files of passwords if you want to manage API passwords, separately.
 
@@ -98,10 +102,10 @@ $  sekrets edit config/zendesk.yml.enc
 ```
 Creates a new encrypted file called 'zendesk.yml.enc'
 
-# Accessing secrets in your Rails App
-Now that you have files encrypted, here's how to access them in your app.
+## Assigning secrets to variables
+Now that you have files encrypted, here's how to access them in Rails.
 
-## (Step 1) Set a variable
+### (Step 1) Set secrets to a variable
 ```
     settings = Sekrets.settings_for(Rails.root.join('sekrets', 'ciphertext')) # First File
 
@@ -109,25 +113,20 @@ Now that you have files encrypted, here's how to access them in your app.
 ```
 
 
-## (Step 2) Set keys
+### (Step 2) Calling a particular secret
 Now that you have the variable, you can use it with whatever content you need (YAML Format example here)
-
-### Calling the keys
 
 ```
     settings[:api_key] #=> 123thisIsATestKey
 ```
 
-### Set values with your variables
+#### Then, set values with your variables
 
 ```
     config.token = settings[:api_key]
 ```
 
-Or, whatever your particular need is to set.
-
-
-# Non-Rails
+# Using without Rails
 Sekrets can be used in non-rails apps.
 
 ## (Step 1) Create both key and encrypted file
@@ -151,9 +150,9 @@ Sekrets can be used in non-rails apps.
 
 After you add your key to `.sekrets.key', all sekret files will access the key.
 
-## Additional Comments
+# Additional Comments
 
-### If using Capistrano
+## If using Capistrano
 
 _Not necessary for heroku_
 
@@ -161,7 +160,7 @@ Make sure this file gets deployed on your server
 
   echo " require 'sekrets/capistrano' " >> Capfile
 
-### KEY LOOKUP
+## KEY LOOKUP
 for *all* operations, from the command line or otherwise, sekrets uses the
 following algorithm to search for a decryption key:
 
@@ -203,7 +202,7 @@ following algorithm to search for a decryption key:
 
 see Sekrets.key_for for more details
 
-### KEY DISTRIBUTION
+## KEY DISTRIBUTION
   sekrets does *not* attempt to solve the key distribution problem for you,
   with one exception:
 
@@ -217,7 +216,7 @@ see Sekrets.key_for for more details
 
     scp ./sekrets.key deploy@remote.host.com:/rails_root/current/sekrets.key
 
-### Be Smart
+## Be Smart
 
   The local keyfile should *never* be checked in and also should be in .gitignore
 
@@ -226,7 +225,7 @@ see Sekrets.key_for for more details
   but you've still got to sovle this problem for yourself ;-/
 
 
-### TODO: Document Configure
+## TODO: Document Configure
 
 ```
  rake sekrets:generate:config
