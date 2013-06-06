@@ -1,13 +1,15 @@
 ![](header.jpg)
 
 
-# Sekrets
-
-Create encrypted config files and eliminate the need to check in unencrypted information, keys, or other sensitive key .
+Create encrypted config files and stop checking in unencrypted information such as keys, or other sensitive information.
 
 ## About
 
-Sekrets is a command line tool to securely manage encrypted files and settings in your rails' applications and git repositories. Check encrypted information into a repository and manage it alongside the rest of the code base.
+Sekrets is a command line tool to create and manage encrypted files for Rails applications and git repositories.
+
+## Purpose
+
+Check encrypted information into a repository and manage it alongside the rest of the code base.
 
 # RAILS
 
@@ -38,9 +40,9 @@ This will create a '.sekrets.key' file with somthing like;
   $ echo .sekrets.key >> .gitignore
 ```
 
-You should **never** commit the key files
+You should **never** commit .key files
 
-## (Step 4) Add your secrets with Rake
+## (Step 4) Create the file that holds your secrets with Rake
 
 ```
   rake sekrets:generate:editor
@@ -52,11 +54,13 @@ This creates a sekrets directory with 2 files;
       ciphertext
       editor
 
-### To add secrets run
+### To add secrets to that file, run
 
 ```
   $  ./sekrets/editor
 ```
+
+Running that command will open your text editor. All your secrets will be added, and encrypted in `ciphertext`.
 
 ### Use YAML formats (Preferred)
 Format your passwords in yaml.;
@@ -67,9 +71,6 @@ Format your passwords in yaml.;
   :api_key: 123thisIsATestKey
   :another_sekret: foobarbaz
 ```
-
-
-Running that command will open your text editor. All your secrets will be added, and encrypted in `ciphertext`.
 
 _Save the file and close._
 
@@ -89,6 +90,7 @@ _Save the file and close._
 
 ## Having multiple Sekret files
 You can add additional files of passwords if you want to manage API passwords, separately.
+
 _You only need your single original `.sekrets.key' file._
 
 ```
@@ -96,7 +98,8 @@ $  sekrets edit config/zendesk.yml.enc
 ```
 Creates a new encrypted file called 'zendesk.yml.enc'
 
-# Accessing secrets in your application code
+# Accessing secrets in your Rails App
+Now that you have files encrypted, here's how to access them in your app.
 
 ## (Step 1) Set a variable
 ```
@@ -106,19 +109,23 @@ Creates a new encrypted file called 'zendesk.yml.enc'
 ```
 
 
-## (Step 2) Call variable
+## (Step 2) Set keys
+Now that you have the variable, you can use it with whatever content you need (YAML Format example here)
+
+### Calling the keys
 
 ```
-    config.token = settings[:api_token] #=> 123thisIsATestKey
-    config.foo = settings[:another_sekret] #=> foobarbaz
+    settings[:api_key] #=> 123thisIsATestKey
 ```
 
-
-### Configure things... (What things?)
+### Set values with your variables
 
 ```
- rake sekrets:generate:config
+    config.token = settings[:api_key]
 ```
+
+Or, whatever your particular need is to set.
+
 
 # Non-Rails
 Sekrets can be used in non-rails apps.
@@ -135,7 +142,7 @@ Sekrets can be used in non-rails apps.
   echo 42 > .sekrets.key
 ```
 
-### you now no longer need to provide the --key argument to commands
+### You now no longer need to provide the --key argument to commands
 
 ```
   sekrets read config/settings.yml.enc
@@ -147,13 +154,12 @@ After you add your key to `.sekrets.key', all sekret files will access the key.
 ## Additional Comments
 
 ### If using Capistrano
+
 _Not necessary for heroku_
 
 Make sure this file gets deployed on your server
 
   echo " require 'sekrets/capistrano' " >> Capfile
-
-
 
 ### KEY LOOKUP
 for *all* operations, from the command line or otherwise, sekrets uses the
@@ -218,3 +224,10 @@ see Sekrets.key_for for more details
   distribution of this key among developers is outside the scope of the
   library.  encrypted email is likely the best mechanism for distribution,
   but you've still got to sovle this problem for yourself ;-/
+
+
+### TODO: Document Configure
+
+```
+ rake sekrets:generate:config
+```
