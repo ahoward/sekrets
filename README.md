@@ -6,11 +6,15 @@ Stop checking in unencrypted information.
 
 Sekrets is a command line tool to create and manage encrypted files.
 
+- [Using with Rails](#rails)
+- [Using without Rails](#without-rails)
+- [Additional Comments](#additional-comments)
+
 ## Purpose
 
 Check encrypted information into a repository and manage it alongside the rest of the code base.
 
-# Using with RAILS
+# Using with RAILS <a id="rails"></a>
 
 ## Setup
 
@@ -56,7 +60,7 @@ This creates a sekrets directory with 2 files;
       ciphertext
       editor
 
-#### Add secrets to file by running
+### (Step 5) Add secrets to file by running
 
 ```
   $  ./sekrets/editor
@@ -76,15 +80,15 @@ Format your passwords in yaml.;
 
 _Save the file and close._
 
-## Review your secrets
+## Reviewing your secrets
 
-### Confirm your secrets are encrypted
+### (Step 1) Confirm your secrets are encrypted
 
 ```
   $ cat sekrets/ciphertext
 ```
 
-### Display your secrets;
+### (Step 2) Display your secrets;
 
 ```
   $ sekrets read sekrets/ciphertext
@@ -113,20 +117,23 @@ Now that you have files encrypted, here's how to access them in Rails.
 ```
 
 
-### (Step 2) Calling a particular secret
-Now that you have the variable, you can use it with whatever content you need (YAML Format example here)
+### (Step 2) Call a specific secret
+Now that you have secrets in a variable, you can use whatever content you need (YAML Format example here)
 
 ```
     settings[:api_key] #=> 123thisIsATestKey
 ```
 
-#### Then, set values with your variables
+### (Step 3) Set values with your variables
 
 ```
     config.token = settings[:api_key]
 ```
+This is the the primary use case of Sekrets. You can set tokens and other sensitive information in your app, worry free!
 
-# Using without Rails
+[Additional Comments](#additional-comments)
+
+# Using without Rails <a id="without-rails"></a>
 Sekrets can be used in non-rails apps.
 
 ## (Step 1) Create both key and encrypted file
@@ -150,7 +157,8 @@ Sekrets can be used in non-rails apps.
 
 After you add your key to `.sekrets.key', all sekret files will access the key.
 
-# Additional Comments
+
+# Additional Comments <a id="additional-comments"></a>
 
 ## If using Capistrano
 
