@@ -7,8 +7,16 @@ Stop checking in unencrypted information.
 Sekrets is a command line tool to create and manage encrypted files.
 
 - [Using with Rails](#using-with-rails)
+    - [File Creation](#file-creation)
+    - [Review Sekrets](#reviewing-your-secrets)
+    - [Assign Sekrets](#assigning-secrets-to-variables)
 - [Using without Rails](#using-without-rails)
+    - [Create key & file](#step-1-create-both-key-and-encrypted-file)
 - [Additional Comments](#additional-comments)
+    - [Capistrano](#if-using-capistrano)
+    - [How it works](#how-it-works)
+    - [Key Distribution](#key-distribution)
+- [To Do](#todo-document-configure)
 
 ## Purpose
 
@@ -166,7 +174,7 @@ Make sure this file gets deployed on your server
 
   echo " require 'sekrets/capistrano' " >> Capfile
 
-## KEY LOOKUP
+## How it works
 for *all* operations, from the command line or otherwise, sekrets uses the
 following algorithm to search for a decryption key:
 
