@@ -6,19 +6,17 @@ Stop checking in unencrypted information.
 
 Sekrets is a command line tool to create and manage encrypted files.
 
-- [Using with Rails](#rails)
-- [Using without Rails](#without-rails)
-- [Additional Comments](#additional-comments)
+- [Using with Rails](#using-with-rails-)
+- [Using without Rails](#using-without-rails-)
+- [Additional Comments](#additional-comments-)
 
 ## Purpose
 
 Check encrypted information into a repository and manage it alongside the rest of the code base.
 
-# Using with RAILS <a id="rails"></a>
+# Using with RAILS
 
-## Setup
-
-### (Step 1) Add the Sekrets Gem
+## Add the Sekrets Gem
 
 ```
   gem 'sekrets'
@@ -28,7 +26,7 @@ _Don't forget to bundle install_
 
 ## File Creation
 
-### (Step 2) Generate a key file
+### (Step 1) Generate a key file
 ```
   rake sekrets:generate:key
 ```
@@ -40,7 +38,7 @@ This will create a '.sekrets.key' file with something like;
     b6f3f6fd5a486054e014e3426e84334e
 
 
-### (Step 3) Add .key to .gitignore
+### (Step 2) Add .key to .gitignore
 
 ```
   $ echo .sekrets.key >> .gitignore
@@ -48,7 +46,7 @@ This will create a '.sekrets.key' file with something like;
 
 You should **never** commit .key files
 
-### (Step 4) Generate a file to holds secrets
+### (Step 3) Generate a file to holds secrets
 
 ```
   rake sekrets:generate:editor
@@ -60,7 +58,7 @@ This creates a sekrets directory with 2 files;
       ciphertext
       editor
 
-### (Step 5) Add secrets to file by running
+### (Step 4) Add secrets to file by running
 
 ```
   $  ./sekrets/editor
@@ -131,9 +129,9 @@ Now that you have secrets in a variable, you can use whatever content you need (
 ```
 This is the the primary use case of Sekrets. You can set tokens and other sensitive information in your app, worry free!
 
-[Additional Comments](#additional-comments)
+[Additional Comments](#additional-comments-)
 
-# Using without Rails <a id="without-rails"></a>
+# Using without Rails
 Sekrets can be used in non-rails apps.
 
 ## (Step 1) Create both key and encrypted file
@@ -158,7 +156,7 @@ Sekrets can be used in non-rails apps.
 After you add your key to `.sekrets.key', all sekret files will access the key.
 
 
-# Additional Comments <a id="additional-comments"></a>
+# Additional Comments
 
 ## If using Capistrano
 
