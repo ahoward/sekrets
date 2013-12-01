@@ -245,7 +245,7 @@ class Sekrets
   def Sekrets.binstub
     @binstub ||= (
       unindent(
-        <<-__
+        <<-'_v_'
           #! /usr/bin/env ruby
           
           require 'pathname'
@@ -255,19 +255,27 @@ class Sekrets
           require 'rubygems'
           require 'bundler/setup'
         
-          ciphertext = File.expand_path('ciphertext',
-          File.dirname(__FILE__))
+          dirname = File.dirname(__FILE__)
 
-          if ARGV.empty?
-            ciphertext = File.expand_path('ciphertext', File.dirname(__FILE__))
-            ENV['SEKRETS_ARGV'] = "edit \#{ ciphertext }"
+          root = File.dirname(dirname)
+
+          ciphertext = File.expand_path('ciphertext', dirname)
+
+          case ARGV.size
+            when 0
+              ENV['SEKRETS_ARGV'] = "edit #{ ciphertext }"
+            when 1
+              ENV['SEKRETS_ARGV'] = "#{ ARGV[0] } #{ ciphertext }"
           end
 
-          command = "\#{ Gem.bin_path('sekrets', 'sekrets') } \#{ ARGV.join(' ') }"
-                  
-          exec(command)
+          key = File.join(root, '.sekrets.key')
 
-        __
+          if test(?s, key)
+            ENV['SEKRETS_KEY'] = IO.binread(key).strip
+          end
+
+          exec(Gem.bin_path('sekrets', 'sekrets'))
+        _v_
       )
     )
   end
