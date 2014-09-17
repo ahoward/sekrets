@@ -54,6 +54,10 @@ Main {
 
         settings = Sekrets.settings_for('./config/settings.yml.enc')
         
+      # recrypt an existing encrypted file (aka change the key)
+      
+        sekrets recrypt sekrets.enc [-k current_key] [-k new_key]
+        
 
     GENERAL
       sekrets provides commandline tools and a library to manage and access
