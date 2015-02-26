@@ -19,6 +19,10 @@ Capistrano::Configuration.instance(:must_exist).load do
   end
 
   abort 'could not determine rails_root!' unless rails_root
+
+  unless test(?s, File.join(rails_root, '.sekrets.key'))
+    abort "d'oh - you need a .sekrets.key to deploy ;-("
+  end
         
   namespace :sekrets do
     task :upload_key do
