@@ -24,14 +24,12 @@ Capistrano::Configuration.instance(:must_exist).load do
     task :upload_key do
     
       src = File.join(rails_root, '.sekrets.key')
-      dst = File.join(deploy_to, 'current', '.sekrets.key')
+      dst = File.join(latest_release, '.sekrets.key')
       
       if test(?s, src)
         upload(src, dst, :recursive => true)
       end
     end
   end
-  
-  
-  after('deploy:create_symlink', 'sekrets:upload_key')
+  after('deploy:finalize_update', 'sekrets:upload_key')
 end

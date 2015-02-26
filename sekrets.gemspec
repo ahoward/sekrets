@@ -3,14 +3,19 @@
 
 Gem::Specification::new do |spec|
   spec.name = "sekrets"
-  spec.version = "1.6.0"
+  spec.version = "1.8.0"
   spec.platform = Gem::Platform::RUBY
   spec.summary = "sekrets"
   spec.description = "description: sekrets kicks the ass"
+  spec.license = "Same as Ruby's" 
 
   spec.files =
 ["README",
  "Rakefile",
+ "app",
+ "app/server.rb",
+ "app/views",
+ "app/views/key.erb",
  "bin",
  "bin/sekrets",
  "lib",
@@ -18,6 +23,7 @@ Gem::Specification::new do |spec|
  "lib/sekrets.rb",
  "lib/sekrets/capistrano.rb",
  "sekrets.gemspec",
+ "server.rb",
  "test",
  "test/lib",
  "test/lib/testing.rb",
