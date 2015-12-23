@@ -328,7 +328,11 @@ Main {
 
         command = "#{ Sekrets.editor } #{ basename }"
 
-        system(command)
+        if defined?(Bundler.with_clean_env)
+           Bundler.with_clean_env{ system(command) }
+        else
+          system(command)
+        end
 
         if $?.exitstatus == 0
           content = IO.binread(basename)

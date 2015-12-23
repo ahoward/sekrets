@@ -3,7 +3,7 @@
 
 Gem::Specification::new do |spec|
   spec.name = "sekrets"
-  spec.version = "1.8.1"
+  spec.version = "1.9.0"
   spec.platform = Gem::Platform::RUBY
   spec.summary = "sekrets"
   spec.description = "description: sekrets kicks the ass"
