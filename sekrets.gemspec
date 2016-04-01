@@ -3,7 +3,7 @@
 
 Gem::Specification::new do |spec|
   spec.name = "sekrets"
-  spec.version = "1.9.0"
+  spec.version = "1.9.1"
   spec.platform = Gem::Platform::RUBY
   spec.summary = "sekrets"
   spec.description = "description: sekrets kicks the ass"
@@ -12,18 +12,16 @@ Gem::Specification::new do |spec|
   spec.files =
 ["README",
  "Rakefile",
- "app",
- "app/server.rb",
- "app/views",
- "app/views/key.erb",
  "bin",
  "bin/sekrets",
  "lib",
  "lib/sekrets",
  "lib/sekrets.rb",
  "lib/sekrets/capistrano.rb",
+ "lib/sekrets/tasks",
+ "lib/sekrets/tasks/capistrano2.rb",
+ "lib/sekrets/tasks/sekrets.rake",
  "sekrets.gemspec",
- "server.rb",
  "test",
  "test/lib",
  "test/lib/testing.rb",
