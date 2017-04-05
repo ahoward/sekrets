@@ -292,8 +292,8 @@ class Sekrets
 #
   module Blowfish
     def cipher(mode, key, data)
-      cipher = OpenSSL::Cipher::Cipher.new('bf-cbc').send(mode)
-      cipher.key = Digest::SHA256.digest(key.to_s)
+      cipher = OpenSSL::Cipher.new('bf-cbc').send(mode)
+      cipher.key = Digest::SHA256.digest(key.to_s).slice(0,16)
       cipher.update(data) << cipher.final
     end
 
@@ -333,7 +333,7 @@ BEGIN {
   require 'tmpdir'
 
   class Sekrets < ::String
-    Version = '1.9.1' unless defined?(Version)
+    Version = '1.10.0' unless defined?(Version)
 
     class << Sekrets
       def version
@@ -342,11 +342,11 @@ BEGIN {
 
       def dependencies
         {
-          'highline' => [ 'highline' , ' >= 1.6.15'  ] , 
-          'map'      => [ 'map'      , ' >= 6.3.0'   ]  , 
-          'fattr'    => [ 'fattr'    , ' >= 2.2.1'   ]  , 
-          'coerce'   => [ 'coerce'   , ' >= 0.0.3'   ]  , 
-          'main'     => [ 'main'     , ' >= 5.1.1'   ]  , 
+          'highline' => [ 'highline' , ' ~> 1.6'   ] ,
+          'map'      => [ 'map'      , ' ~> 6.3'   ] ,
+          'fattr'    => [ 'fattr'    , ' ~> 2.2'   ] ,
+          'coerce'   => [ 'coerce'   , ' >= 0.0.3' ] ,
+          'main'     => [ 'main'     , ' ~> 6.1'   ] ,
         }
       end
 

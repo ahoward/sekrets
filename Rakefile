@@ -146,6 +146,8 @@ task :gemspec do
             spec.author = <%= This.author.inspect %>
             spec.email = <%= This.email.inspect %>
             spec.homepage = <%= This.homepage.inspect %>
+
+            spec.required_ruby_version = '>= 1.9'
           end
         __
       }
@@ -294,7 +296,7 @@ BEGIN {
 
 # discover full path to this ruby executable
 #
-  c = Config::CONFIG
+  c = RbConfig::CONFIG
   bindir = c["bindir"] || c['BINDIR']
   ruby_install_name = c['ruby_install_name'] || c['RUBY_INSTALL_NAME'] || 'ruby'
   ruby_ext = c['EXEEXT'] || ''

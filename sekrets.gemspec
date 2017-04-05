@@ -3,14 +3,16 @@
 
 Gem::Specification::new do |spec|
   spec.name = "sekrets"
-  spec.version = "1.9.1"
+  spec.version = "1.10.0"
   spec.platform = Gem::Platform::RUBY
   spec.summary = "sekrets"
   spec.description = "description: sekrets kicks the ass"
   spec.license = "Same as Ruby's" 
 
   spec.files =
-["README",
+["Gemfile",
+ "Gemfile.lock",
+ "README",
  "Rakefile",
  "bin",
  "bin/sekrets",
@@ -34,15 +36,15 @@ Gem::Specification::new do |spec|
   spec.test_files = nil
 
   
-    spec.add_dependency(*["highline", " >= 1.6.15"])
+    spec.add_dependency(*["highline", " ~> 1.6"])
   
-    spec.add_dependency(*["map", " >= 6.3.0"])
+    spec.add_dependency(*["map", " ~> 6.3"])
   
-    spec.add_dependency(*["fattr", " >= 2.2.1"])
+    spec.add_dependency(*["fattr", " ~> 2.2"])
   
     spec.add_dependency(*["coerce", " >= 0.0.3"])
   
-    spec.add_dependency(*["main", " >= 5.1.1"])
+    spec.add_dependency(*["main", " ~> 6.1"])
   
 
   spec.extensions.push(*[])
@@ -51,4 +53,6 @@ Gem::Specification::new do |spec|
   spec.author = "Ara T. Howard"
   spec.email = "ara.t.howard@gmail.com"
   spec.homepage = "https://github.com/ahoward/sekrets"
+
+  spec.required_ruby_version = '>= 1.9'
 end
