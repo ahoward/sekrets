@@ -90,6 +90,7 @@ task :gemspec do
   test_files  = test(?e, "test/#{ lib }.rb") ? "test/#{ lib }.rb" : nil
   summary     = object.respond_to?(:summary) ? object.summary : "summary: #{ lib } kicks the ass"
   description = object.respond_to?(:description) ? object.description : "description: #{ lib } kicks the ass"
+  license     = object.respond_to?(:license) ? object.license : "BSD-2-Clause"
 
   if This.extensions.nil?
     This.extensions = []
