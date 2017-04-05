@@ -45,7 +45,7 @@ Gem::Specification::new do |spec|
   
     spec.add_dependency(*["fattr", " ~> 2.2"])
   
-    spec.add_dependency(*["coerce", " >= 0.0.3"])
+    spec.add_dependency(*["coerce", " ~> 0.0.3"])
   
     spec.add_dependency(*["main", " ~> 6.1"])
   

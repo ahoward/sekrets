@@ -352,7 +352,7 @@ BEGIN {
           'highline' => [ 'highline' , ' ~> 1.6'   ] ,
           'map'      => [ 'map'      , ' ~> 6.3'   ] ,
           'fattr'    => [ 'fattr'    , ' ~> 2.2'   ] ,
-          'coerce'   => [ 'coerce'   , ' >= 0.0.3' ] ,
+          'coerce'   => [ 'coerce'   , ' ~> 0.0.3' ] ,
           'main'     => [ 'main'     , ' ~> 6.1'   ] ,
         }
       end
