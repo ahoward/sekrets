@@ -146,6 +146,8 @@ task :gemspec do
             spec.author = <%= This.author.inspect %>
             spec.email = <%= This.email.inspect %>
             spec.homepage = <%= This.homepage.inspect %>
+
+            spec.required_ruby_version = '>= 1.9'
           end
         __
       }

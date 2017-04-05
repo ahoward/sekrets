@@ -1,12 +1,12 @@
 PATH
   remote: .
   specs:
-    sekrets (1.9.1)
+    sekrets (1.10.0)
       coerce (>= 0.0.3)
-      fattr (>= 2.2.1)
-      highline (>= 1.6.15)
-      main (>= 5.1.1)
-      map (>= 6.3.0)
+      fattr (~> 2.2)
+      highline (~> 1.6)
+      main (~> 6.1)
+      map (~> 6.3)
 
 GEM
   remote: https://rubygems.org/

@@ -53,4 +53,6 @@ Gem::Specification::new do |spec|
   spec.author = "Ara T. Howard"
   spec.email = "ara.t.howard@gmail.com"
   spec.homepage = "https://github.com/ahoward/sekrets"
+
+  spec.required_ruby_version = '>= 1.9'
 end
