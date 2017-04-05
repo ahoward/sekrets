@@ -48,7 +48,7 @@ ignore this file in git
 
     echo .sekrets.key >> .gitignore
 
-you now no longer need to provide the --key argument to commands
+you now no longer need to provide the `--key` argument to commands
 
     sekrets read config/settings.yml.enc
     sekrets edit config/settings.yml.enc
