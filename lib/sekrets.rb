@@ -6,6 +6,13 @@ class Sekrets
   Fattr(:project_key){ File.join(root, '.sekrets.key') }
   Fattr(:global_key){ File.join(File.expand_path('~'), '.sekrets.key') }
 
+  Fattr(:summary){ "securely manage encrypted files and settings" }
+
+  Fattr(:description){
+    "sekrets is a command line tool and library used to securely manage encrypted files and settings in your rails' applications and git repositories."
+  }
+
+
 #
   def Sekrets.key_for(*args)
     options = Map.options_for!(args)
@@ -381,14 +388,6 @@ BEGIN {
     gem(*dependency) if defined?(gem)
     require(lib)
   end
-
-  Sekrets.fattr(:description){
-    <<-__
-
-      foobar
-
-    __
-  }
 
   if defined?(Rails)
 
