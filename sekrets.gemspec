@@ -7,8 +7,8 @@ Gem::Specification::new do |spec|
   spec.name = "sekrets"
   spec.version = "1.10.0"
   spec.platform = Gem::Platform::RUBY
-  spec.summary = "sekrets"
-  spec.description = "description: sekrets kicks the ass"
+  spec.summary = "securely manage encrypted files and settings"
+  spec.description = "sekrets is a command line tool and library used to securely manage encrypted files and settings in your rails' applications and git repositories."
   spec.license = "BSD-2-Clause"
 
   spec.files =
