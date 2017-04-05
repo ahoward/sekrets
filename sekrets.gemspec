@@ -15,7 +15,7 @@ Gem::Specification::new do |spec|
 ["Gemfile",
  "Gemfile.lock",
  "LICENSE",
- "README",
+ "README.md",
  "Rakefile",
  "bin",
  "bin/sekrets",
