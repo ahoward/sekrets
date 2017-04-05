@@ -128,7 +128,7 @@ task :gemspec do
             spec.name = #{ lib.inspect }
             spec.version = #{ version.inspect }
             spec.platform = Gem::Platform::RUBY
-            spec.summary = #{ lib.inspect }
+            spec.summary = #{ summary.inspect }
             spec.description = #{ description.inspect }
             spec.license = #{ license.inspect }
 
