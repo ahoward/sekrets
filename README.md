@@ -14,7 +14,7 @@ sekrets is a command line tool and library used to securely manage encrypted fil
 
 sekrets provides commandline tools and a library to manage and access encrypted files in your code base.
 
-It allows one to check encrypted infomation into a repository and to manage it alongside the rest of the code base. It elimnates the need to check in unencrypted information, keys, or other sensitive infomation.
+It allows one to check encrypted information into a repository and to manage it alongside the rest of the code base. It eliminates the need to check in unencrypted information, keys, or other sensitive information.
 
 sekrets provides both a general mechanism for managing arbitrary encrypted files and a specific mechanism for managing encrypted config files.
 
@@ -94,7 +94,7 @@ see `Sekrets.key_for` for explicit details
 
 ## KEY DISTRIBUTION
 
-sekrets does *not* attempt to solve the key distribution problem for you,with one exception:
+sekrets does *not* attempt to solve the key distribution problem for you, with one exception:
 
 If you are using capistrano to do a *vanilla* ssh based deploy, a simple recipe is provided which will detect a local keyfile and scp it onto the remote server(s) on deploy.
 
