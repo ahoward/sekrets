@@ -159,6 +159,22 @@ class Sekrets
     end
   end
 
+  def Sekrets.tmpfile_for(basename, data)
+    tmpfile = File.join(Sekrets.tmpdir, basename)
+    IO.binwrite(tmpfile, data)
+    tmpfile
+  end
+
+  def Sekrets.system(command)
+    if defined?(Bundler.with_clean_env)
+      Bundler.with_clean_env{ Kernel.system(command) }
+    else
+      Kernel.system(command)
+    end
+
+    return $?.exitstatus
+  end
+
 #
   def Sekrets.openw(arg, &block)
     opened = false
@@ -300,7 +316,7 @@ class Sekrets
   module Blowfish
     def cipher(mode, key, data)
       cipher = OpenSSL::Cipher.new('bf-cbc').send(mode)
-      cipher.key = Digest(SHA256).digest(key.to_s).slice(0,16)
+      cipher.key = Digest::SHA256.digest(key.to_s).slice(0,16)
       cipher.update(data) << cipher.final
     end
 
@@ -340,7 +356,7 @@ BEGIN {
   require 'tmpdir'
 
   class Sekrets < ::String
-    Version = '1.10.0' unless defined?(Version)
+    Version = '1.11.0' unless defined?(Version)
 
     class << Sekrets
       def version

@@ -323,21 +323,16 @@ Main {
       basename = File.basename(path)
       encrypted = nil
 
-      Sekrets.tmpdir do
-        IO.binwrite(basename, decrypted)
+      tmpfile = Sekrets.tmpfile_for(basename, decrypted)
+      command = "#{ Sekrets.editor } #{ tmpfile }"
 
-        command = "#{ Sekrets.editor } #{ basename }"
+      status = Sekrets.system(command)
 
-        if defined?(Bundler.with_clean_env)
-           Bundler.with_clean_env{ system(command) }
-        else
-          system(command)
-        end
-
-        if $?.exitstatus == 0
-          content = IO.binread(basename)
-          Sekrets.write(path, content, :key => key)
-        end
+      if status == 0
+        content = IO.binread(tmpfile)
+        Sekrets.write(path, content, :key => key)
+      else
+        abort "command `#{ command }` failed and no new `#{ path }` was saved!"
       end
     end
   }
