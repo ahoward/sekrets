@@ -166,8 +166,9 @@ class Sekrets
   end
 
   def Sekrets.system(command)
-    if defined?(Bundler.with_clean_env)
-      Bundler.with_clean_env{ Kernel.system(command) }
+    if defined?(Bundler)
+      msg = (Bundler.respond_to?('with_original_env') ? 'with_original_env' : 'with_clean_env')
+      Bundler.send(msg){ Kernel.system(command) }
     else
       Kernel.system(command)
     end
@@ -356,7 +357,7 @@ BEGIN {
   require 'tmpdir'
 
   class Sekrets < ::String
-    Version = '1.11.0' unless defined?(Version)
+    Version = '1.12.0' unless defined?(Version)
 
     class << Sekrets
       def version
