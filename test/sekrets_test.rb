@@ -51,11 +51,13 @@ Testing Sekrets do
       command = %[ #{ ruby } -r #{ $libdir }/sekrets.rb -e'puts Sekrets.key_for("plaintext")' ]
 
       key = nil
+
       PTY.spawn(command) do |r, w, pid|
         w.puts('foobar')
         w.close
-        key = r.read.to_s.strip
+        key = r.gets.to_s.strip rescue Errno::EIO
       end
+
       assert{ key =~ /foobar/ }
 
       key = `#{ command } </dev/null`
