@@ -151,7 +151,7 @@ class Sekrets
       dirname
     end
   end
- 
+
 #
   def Sekrets.openw(arg, &block)
     opened = false
@@ -174,7 +174,7 @@ class Sekrets
           open(tmp, 'wb+')
       end
 
-    close = 
+    close =
       proc do
         io.close if opened
         atomic_move.call
@@ -207,7 +207,7 @@ class Sekrets
           open(arg, 'rb+')
       end
 
-    close = 
+    close =
       proc do
         io.close if opened
       end
@@ -247,14 +247,14 @@ class Sekrets
       unindent(
         <<-'_v_'
           #! /usr/bin/env ruby
-          
+
           require 'pathname'
           ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
             Pathname.new(__FILE__).realpath)
-          
+
           require 'rubygems'
           require 'bundler/setup'
-        
+
           dirname = File.dirname(__FILE__)
 
           root = File.dirname(dirname)
@@ -292,8 +292,14 @@ class Sekrets
 #
   module Blowfish
     def cipher(mode, key, data)
-      cipher = OpenSSL::Cipher::Cipher.new('bf-cbc').send(mode)
-      cipher.key = Digest::SHA256.digest(key.to_s)
+      if RUBY_VERSION > '3.1'
+        cipher = OpenSSL::Cipher.new('aes-256-cfb').send(mode)
+        cipher.key = Digest::SHA256.digest(key.to_s).slice(0,32)
+      else
+        cipher = OpenSSL::Cipher::Cipher.new('bf-cbc').send(mode)
+        cipher.key = Digest::SHA256.digest(key.to_s).slice(0,16)
+      end
+
       cipher.update(data) << cipher.final
     end
 
@@ -342,11 +348,11 @@ BEGIN {
 
       def dependencies
         {
-          'highline' => [ 'highline' , ' >= 1.6.15'  ] , 
-          'map'      => [ 'map'      , ' >= 6.3.0'   ]  , 
-          'fattr'    => [ 'fattr'    , ' >= 2.2.1'   ]  , 
-          'coerce'   => [ 'coerce'   , ' >= 0.0.3'   ]  , 
-          'main'     => [ 'main'     , ' >= 5.1.1'   ]  , 
+          'highline' => [ 'highline' , ' >= 1.6.15'  ] ,
+          'map'      => [ 'map'      , ' >= 6.3.0'   ]  ,
+          'fattr'    => [ 'fattr'    , ' >= 2.2.1'   ]  ,
+          'coerce'   => [ 'coerce'   , ' >= 0.0.3'   ]  ,
+          'main'     => [ 'main'     , ' >= 5.1.1'   ]  ,
         }
       end
 
@@ -494,7 +500,7 @@ BEGIN {
                           warn "missing \#{ key }!"
                         end
                       end
-                      
+
                     __
                     fd.puts(code)
                   end
