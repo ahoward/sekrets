@@ -316,7 +316,7 @@ class Sekrets
 #
   module Blowfish
     def cipher(mode, key, data)
-      if RUBY_VERSION > '3.1'
+      if RUBY_VERSION > '3.0'
         cipher = OpenSSL::Cipher.new('aes-256-cfb').send(mode)
         cipher.key = Digest::SHA256.digest(key.to_s).slice(0,32)
       else
