@@ -96,7 +96,7 @@ task :gemspec do
     This.extensions = []
     extensions = This.extensions
     %w( Makefile configure extconf.rb ).each do |ext|
-      extensions << ext if File.exists?(ext)
+      extensions << ext if File.exist?(ext)
     end
   end
   extensions = [extensions].flatten.compact
@@ -145,7 +145,6 @@ task :gemspec do
 
             spec.extensions.push(*#{ extensions.inspect })
 
-            spec.rubyforge_project = #{ This.rubyforge_project.inspect }
             spec.author = #{ This.author.inspect }
             spec.email = #{ This.email.inspect }
             spec.homepage = #{ This.homepage.inspect }
