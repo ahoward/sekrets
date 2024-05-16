@@ -228,7 +228,7 @@ class Sekrets
           STDIN
         else
           opened = true
-          open(arg, 'rb+')
+          open(arg, 'rb')
       end
 
     close =
