@@ -331,7 +331,7 @@ class Sekrets
           ::OpenSSL::Cipher.new('bf-cbc').send(mode)
         end
 
-      cipher.key = ::Digest::SHA256.digest(key.to_s).slice(0, 16)
+      cipher.key = Digest(:SHA256).digest(key.to_s).slice(0, 16)
 
       cipher.update(data) << cipher.final
     end
@@ -365,6 +365,7 @@ Sekret = Sekrets
 
 BEGIN {
 
+  require 'digest'
   require 'openssl'
   require 'fileutils'
   require 'erb'
@@ -372,7 +373,7 @@ BEGIN {
   require 'tmpdir'
 
   class Sekrets < ::String
-    Version = '1.14.0' unless defined?(Version)
+    Version = '2.0.0' unless defined?(Version)
 
     class << Sekrets
       def version
